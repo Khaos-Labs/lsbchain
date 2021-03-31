@@ -1,6 +1,6 @@
 #!/bin/bash
 
-KEY="lsbchain-mainnet-bxlkm"
+KEY="lsbchain-mainnet-buterin"
 CHAINID="lsbchain-65"
 MONIKER="lsbchain-mainnet-1"
 
