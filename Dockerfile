@@ -1,31 +1,29 @@
+# Simple usage with a mounted data directory:
+# > docker build -t lsbchain .
+# > docker run -it -p 36657:36657 -p 36656:36656 -v ~/.lsbchaind:/root/.lsbchaind -v ~/.lsbchaincli:/root/.lsbchaincli lsbchain lsbchaind init mynode
+# > docker run -it -p 36657:36657 -p 36656:36656 -v ~/.lsbchaind:/root/.lsbchaind -v ~/.lsbchaincli:/root/.lsbchaincli lsbchain lsbchaind start
 FROM golang:alpine AS build-env
 
-# Set up dependencies
-ENV PACKAGES git build-base
+# Install minimum necessary dependencies, remove packages
+RUN apk add --no-cache curl make git libc-dev bash gcc linux-headers eudev-dev
 
 # Set working directory for the build
 WORKDIR /go/src/github.com/Khaos-Labs/lsbchain
 
-# Install dependencies
-RUN apk add --update $PACKAGES
-RUN apk add linux-headers
-
 # Add source files
 COPY . .
 
-# Make the binary
-RUN make build
+# Build LSBChain
+RUN GOPROXY=http://goproxy.cn make install
 
 # Final image
-FROM alpine
+FROM alpine:edge
 
-# Install ca-certificates
-RUN apk add --update ca-certificates jq
 WORKDIR /root
 
 # Copy over binaries from the build-env
-COPY --from=build-env /go/src/github.com/Khaos-Labs/lsbchain/build/lsbchaind /usr/bin/lsbchaind
-COPY --from=build-env /go/src/github.com/Khaos-Labs/lsbchain/build/lsbchaincli /usr/bin/lsbchaincli
+COPY --from=build-env /go/bin/lsbchaind /usr/bin/lsbchaind
+COPY --from=build-env /go/bin/lsbchaincli /usr/bin/lsbchaincli
 
-# Run lsbchaind by default
+# Run okexchaind by default, omit entrypoint to ease using container with lsbchaincli
 CMD ["lsbchaind"]
