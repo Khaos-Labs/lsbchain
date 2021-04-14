@@ -7,6 +7,8 @@ MONIKER="lsbchain-mainnet-1"
 # remove existing daemon and client
 rm -rf ~/.lsbchain*
 
+export GOPROXY=http://goproxy.cn
+
 if [[ "$(uname)" == "Darwin" ]]; then
     # Do something under Mac OS X platform
     # macOS 10.15
