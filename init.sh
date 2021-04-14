@@ -1,7 +1,7 @@
 #!/bin/bash
 
 KEY="lsbchain-mainnet-buterin"
-CHAINID="lsbchain-65"
+CHAINID="lsbchain-8"
 MONIKER="lsbchain-mainnet-1"
 
 # remove existing daemon and client
